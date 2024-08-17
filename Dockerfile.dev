@@ -65,33 +65,9 @@ ENTRYPOINT /docker-entrypoint.sh $0 $@
 CMD ["uvicorn", "--reload", "--host=0.0.0.0", "--port=8000", "minimal_fastapi.main:app"]
 
 
-# # 'lint' stage runs black and isort
-# # running in check mode means build will fail if any linting errors occur
-FROM development AS lint
-RUN black --config ./pyproject.toml --check app tests
-RUN isort --settings-path ./pyproject.toml --recursive --check-only
-CMD ["tail", "-f", "/dev/null"]
-
-# # 'production' stage uses the clean 'python-base' stage and copyies
-# # in only our runtime deps that were installed in the 'builder-base'
-# FROM python-base AS production
-# ENV FASTAPI_ENV=production
-
-# COPY --from=builder-base $VENV_PATH $VENV_PATH
-# COPY gunicorn_conf.py /gunicorn_conf.py
-
-# COPY docker-entrypoint.sh /docker-entrypoint.sh
-# RUN chmod +x /docker-entrypoint.sh
-
-# # Create user with the name poetry
-# RUN groupadd -g 1500 poetry && \
-#     useradd -m -u 1500 -g poetry poetry
-
-# COPY --chown=poetry:poetry ./app /app
-# USER poetry
-# WORKDIR /app
-RUN echo "Build finished!"
-
-# ENTRYPOINT /docker-entrypoint.sh $0 $@
-# CMD [ "gunicorn", "--worker-class uvicorn.workers.UvicornWorker", "--config /gunicorn_conf.py", "main:app"]
-
+# # # 'lint' stage runs black and isort
+# # # running in check mode means build will fail if any linting errors occur
+# FROM development AS lint
+# RUN black --config ./pyproject.toml --check minimal_fastapi tests
+# RUN isort --settings-path ./pyproject.toml --recursive --check-only
+# CMD ["tail", "-f", "/dev/null"]
