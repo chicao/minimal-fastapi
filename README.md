@@ -1,7 +1,7 @@
 
 ## TO DOs
 
-Set up docker
+1. Add `test`stage into `Dockerfile`
 
 ## SetUp project
 
@@ -67,9 +67,54 @@ warnings.export = true
 $ poetry config virtualenvs.in-project true
 ```
 
-
 ### Docker
 
-```bash
+Check containers IPs:
+```shell
 $ docker network inspect bridge -f '{{json .Containers}}'
 ```
+
+Build images with:
+
+```shell
+docker build -t minimal-fastapi .
+```
+
+The Dockerfile uses multi-stage builds to run lint and test stages before building the production stage.
+If linting or testing fails the build will fail.
+
+You can stop the build at specific stages with the `--target` option:
+
+```shell
+# STAGE options are: development, production
+docker build -t minimal-fastapi --target $STAGE .
+```
+
+We could then get a shell inside the container with:
+
+```shell
+docker run -it minimal-fastapi:dev bash
+```
+
+If you do not specify a target the resulting image will be the last image defined which in our case is the 'production' image.
+
+Run the 'production' image:
+
+```shell
+docker run -it -p 8000:8000 minimal-fastapi:dev
+```
+
+Open your browser and go to [http://localhost:8000/redoc](http://localhost:8000/redoc) to see the API spec in ReDoc.
+
+### Docker Compose
+
+You can build and run the container with Docker Compose
+
+```shell
+docker compose up
+```
+
+Or, run in *detached* mode if you prefer.
+
+> **NOTE** - If you use an older version of Docker Compose,
+> you may need to uncomment the version in the docker-compose,yml file!
