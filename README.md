@@ -87,7 +87,7 @@ You can stop the build at specific stages with the `--target` option:
 
 ```shell
 # STAGE options are: development, production
-docker build -t minimal-fastapi --target $STAGE .
+docker build -t minimal-fastapi:<STAGE> --target <STAGE> .
 ```
 
 We could then get a shell inside the container with:
