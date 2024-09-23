@@ -1,0 +1,21 @@
+name: Minimal Fastapi Docker Image Validation
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+
+  build-dev:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Dev Image Build
+      run: docker build --no-cache --tag minimal-fastapi:$(date +%s) --tag minimal-fastapi:dev --file Dockerfile --target development .      
+
+  build-prd:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Prod Image Build
+      run: docker build --no-cache --tag minimal-fastapi:$(date +%s) --tag minimal-fastapi:dev --file Dockerfile --target development .      
